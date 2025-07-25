@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dua Tracker - Daily Recitations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'islamic-green': '#1B5E20',
+                        'soft-green': '#4CAF50',
+                        'light-green': '#81C784',
+                        'very-light-green': '#E8F5E8',
+                        'accent-green': '#2E7D32'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        .arabic-font {
+            font-family: 'Amiri', serif;
+        }
+        
+        .islamic-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234CAF50' fill-opacity='0.03'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+        }
+        
+        .increment-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .increment-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .counter-animation {
+            animation: counterPulse 0.4s ease-in-out;
+        }
+        
+        @keyframes counterPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); color: #2E7D32; }
+            100% { transform: scale(1); }
+        }
+        
+        .tag-protection { background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); color: #1565C0; }
+        .tag-morning { background: linear-gradient(135deg, #FFF3E0 0%, #FFCC02 100%); color: #E65100; }
+        .tag-evening { background: linear-gradient(135deg, #F3E5F5 0%, #CE93D8 100%); color: #7B1FA2; }
+        .tag-gratitude { background: linear-gradient(135deg, #E8F5E8 0%, #A5D6A7 100%); color: #2E7D32; }
+        .tag-forgiveness { background: linear-gradient(135deg, #FFF8E1 0%, #FFE082 100%); color: #F57F17; }
+        .tag-guidance { background: linear-gradient(135deg, #E1F5FE 0%, #81D4FA 100%); color: #0277BD; }
+    </style>
+</head>
+<body class="bg-gray-50 font-['Inter'] islamic-pattern min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-md mx-auto px-4 py-6">
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-islamic-green mb-2">السلام عليكم</h1>
+                <p class="text-lg text-gray-600 mb-1">Assalamu Alaikum</p>
+                <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Today's Progress -->
+    <section class="max-w-md mx-auto px-4 py-6">
+        <div class="bg-gradient-to-r from-soft-green to-light-green rounded-2xl p-6 text-white mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold mb-1">Today's Progress</h2>
+                    <p class="text-green-100 text-sm">Keep up the great work!</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold" id="total-recitations">0</div>
+                    <div class="text-green-100 text-sm">Total Recitations</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Duas Grid -->
+    <section class="max-w-md mx-auto px-4 pb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold text-islamic-green">My Duas</h2>
+            <button class="text-soft-green hover:text-accent-green transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="space-y-4">
+            <!-- Dua Card 1 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Morning Protection</h3>
+                        <span class="tag-protection px-3 py-1 rounded-full text-xs font-medium">Protection</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 1)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dua Card 2 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Fajr Remembrance</h3>
+                        <span class="tag-morning px-3 py-1 rounded-full text-xs font-medium">Morning</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 2)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dua Card 3 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Evening Dhikr</h3>
+                        <span class="tag-evening px-3 py-1 rounded-full text-xs font-medium">Evening</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 3)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dua Card 4 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Gratitude Prayer</h3>
+                        <span class="tag-gratitude px-3 py-1 rounded-full text-xs font-medium">Gratitude</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 4)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dua Card 5 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Seeking Forgiveness</h3>
+                        <span class="tag-forgiveness px-3 py-1 rounded-full text-xs font-medium">Forgiveness</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 5)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dua Card 6 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-islamic-green text-lg mb-2">Guidance & Wisdom</h3>
+                        <span class="tag-guidance px-3 py-1 rounded-full text-xs font-medium">Guidance</span>
+                    </div>
+                    <button class="increment-btn bg-soft-green hover:bg-accent-green text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md" onclick="incrementCounter(this, 6)">
+                        +
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span class="counter-display font-medium text-islamic-green">Recited: <span class="count">0</span> times</span>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Last: Never
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="max-w-md mx-auto">
+            <div class="flex justify-around">
+                <button class="flex flex-col items-center py-2 px-3 text-soft-green">
+                    <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span class="text-xs">Home</span>
+                </button>
+                <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span class="text-xs">Stats</span>
+                </button>
+                <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="text-xs">Add</span>
+                </button>
+                <button class="flex flex-col items-center py-2 px-3 text-gray-400">
+                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span class="text-xs">Settings</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Set current date
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Update total recitations counter
+        function updateTotalRecitations() {
+            const counts = document.querySelectorAll('.count');
+            let total = 0;
+            counts.forEach(count => {
+                total += parseInt(count.textContent);
+            });
+            document.getElementById('total-recitations').textContent = total;
+        }
+
+        // Increment counter function
+        function incrementCounter(button, duaId) {
+            const card = button.closest('.bg-white');
+            const countElement = card.querySelector('.count');
+            const counterDisplay = card.querySelector('.counter-display');
+            const lastElement = card.querySelector('.text-xs.text-gray-400');
+            
+            // Increment count
+            let currentCount = parseInt(countElement.textContent);
+            currentCount++;
+            countElement.textContent = currentCount;
+            
+            // Update last recited time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            lastElement.textContent = `Last: ${timeString}`;
+            
+            // Add animation to counter
+            counterDisplay.classList.add('counter-animation');
+            setTimeout(() => {
+                counterDisplay.classList.remove('counter-animation');
+            }, 400);
+            
+            // Button feedback animation
+            button.style.transform = 'scale(0.9)';
+            button.style.backgroundColor = '#2E7D32';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+                button.style.backgroundColor = '';
+            }, 150);
+            
+            // Update total
+            updateTotalRecitations();
+            
+            // Save to localStorage (simple persistence)
+            localStorage.setItem(`dua_${duaId}_count`, currentCount);
+            localStorage.setItem(`dua_${duaId}_last`, timeString);
+        }
+
+        // Load saved data
+        function loadSavedData() {
+            const cards = document.querySelectorAll('.bg-white.rounded-2xl');
+            cards.forEach((card, index) => {
+                const duaId = index + 1;
+                const savedCount = localStorage.getItem(`dua_${duaId}_count`);
+                const savedLast = localStorage.getItem(`dua_${duaId}_last`);
+                
+                if (savedCount) {
+                    const countElement = card.querySelector('.count');
+                    countElement.textContent = savedCount;
+                }
+                
+                if (savedLast) {
+                    const lastElement = card.querySelector('.text-xs.text-gray-400');
+                    lastElement.textContent = `Last: ${savedLast}`;
+                }
+            });
+            
+            updateTotalRecitations();
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            loadSavedData();
+            
+            // Add click handlers for navigation
+            const navButtons = document.querySelectorAll('nav button');
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active state from all buttons
+                    navButtons.forEach(btn => {
+                        btn.classList.remove('text-soft-green');
+                        btn.classList.add('text-gray-400');
+                    });
+                    
+                    // Add active state to clicked button
+                    this.classList.remove('text-gray-400');
+                    this.classList.add('text-soft-green');
+                });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96357255c0cbf257',t:'MTc1MzIxMzYxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
