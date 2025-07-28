@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Dua Set - Islamic App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .islamic-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(34, 197, 94, 0.02) 0%, transparent 50%);
+            background-size: 150px 150px, 200px 200px, 100px 100px;
+        }
+        
+        .geometric-border {
+            background: linear-gradient(45deg, transparent 30%, rgba(34, 197, 94, 0.1) 30%, rgba(34, 197, 94, 0.1) 70%, transparent 70%),
+                        linear-gradient(-45deg, transparent 30%, rgba(251, 191, 36, 0.1) 30%, rgba(251, 191, 36, 0.1) 70%, transparent 70%);
+            background-size: 20px 20px;
+        }
+        
+        .dua-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dua-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        
+        .dua-card.selected {
+            border-color: rgba(34, 197, 94, 0.4);
+            background: rgba(34, 197, 94, 0.05);
+        }
+        
+        .checkbox-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #22c55e;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-custom:checked {
+            background: #22c55e;
+            border-color: #16a34a;
+        }
+        
+        .checkbox-custom:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .add-dua-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .add-dua-form.open {
+            max-height: 500px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        
+        .save-button {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+        
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        
+        .gold-accent {
+            color: #d97706;
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid rgba(34, 197, 94, 0.1);
+        }
+        
+        .input-field:focus {
+            border-color: rgba(34, 197, 94, 0.4);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 islamic-pattern">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="relative inline-block">
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Create Dua Set</h1>
+                <div class="w-32 h-1 bg-gradient-to-r from-green-400 via-amber-400 to-green-600 mx-auto rounded-full"></div>
+            </div>
+            <p class="text-gray-600 mt-4 text-lg">Organize your duas into meaningful collections</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Reason Input -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-green-100">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i class="fas fa-lightbulb gold-accent mr-2"></i>
+                        Reason for this Dua Set
+                    </label>
+                    <input 
+                        type="text" 
+                        id="duaSetReason"
+                        class="input-field w-full px-4 py-4 rounded-2xl bg-white/80 focus:outline-none text-gray-800 placeholder-gray-400"
+                        placeholder="Enter reason for this Dua Set (e.g., Morning Prayers, Before Sleep, etc.)"
+                    >
+                </div>
+
+                <!-- Available Duas -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-green-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-list gold-accent mr-2"></i>
+                        Available Duas
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="duaGrid">
+                        <!-- Sample Duas -->
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 1)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua1">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Protection</h4>
+                                    <p class="text-sm text-gray-600 mb-2">أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</p>
+                                    <p class="text-xs text-gray-500">I seek refuge in Allah from Satan the accursed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 2)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua2">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Guidance</h4>
+                                    <p class="text-sm text-gray-600 mb-2">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</p>
+                                    <p class="text-xs text-gray-500">Guide us to the straight path</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 3)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua3">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Forgiveness</h4>
+                                    <p class="text-sm text-gray-600 mb-2">رَبِّ اغْفِرْ لِي ذَنْبِي</p>
+                                    <p class="text-xs text-gray-500">My Lord, forgive me my sin</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 4)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua4">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Health</h4>
+                                    <p class="text-sm text-gray-600 mb-2">اللَّهُمَّ عَافِنِي فِي بَدَنِي</p>
+                                    <p class="text-xs text-gray-500">O Allah, grant me health in my body</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 5)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua5">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Gratitude</h4>
+                                    <p class="text-sm text-gray-600 mb-2">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</p>
+                                    <p class="text-xs text-gray-500">All praise is due to Allah, Lord of the worlds</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dua-card rounded-2xl p-4 cursor-pointer" onclick="toggleDua(this, 6)">
+                            <div class="flex items-start space-x-3">
+                                <input type="checkbox" class="checkbox-custom mt-1" id="dua6">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Dua for Peace</h4>
+                                    <p class="text-sm text-gray-600 mb-2">اللَّهُمَّ أَنْتَ السَّلَامُ</p>
+                                    <p class="text-xs text-gray-500">O Allah, You are Peace</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add More Dua Button -->
+                    <button 
+                        onclick="toggleAddDuaForm()"
+                        class="w-full py-3 px-6 bg-gradient-to-r from-amber-100 to-green-100 hover:from-amber-200 hover:to-green-200 text-gray-700 font-semibold rounded-2xl border-2 border-dashed border-green-300 transition-all duration-300 hover:border-green-400"
+                    >
+                        <i class="fas fa-plus mr-2"></i>
+                        Add More Dua
+                    </button>
+
+                    <!-- Add Dua Form -->
+                    <div class="add-dua-form mt-6" id="addDuaForm">
+                        <div class="bg-gradient-to-r from-green-50 to-amber-50 rounded-2xl p-6 border border-green-200">
+                            <h4 class="font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-edit gold-accent mr-2"></i>
+                                Add Custom Dua
+                            </h4>
+                            <div class="space-y-4">
+                                <input 
+                                    type="text" 
+                                    id="customTitle"
+                                    class="input-field w-full px-4 py-3 rounded-xl bg-white/80 focus:outline-none text-gray-800 placeholder-gray-400"
+                                    placeholder="Dua Title"
+                                >
+                                <textarea 
+                                    id="customContent"
+                                    rows="3"
+                                    class="input-field w-full px-4 py-3 rounded-xl bg-white/80 focus:outline-none text-gray-800 placeholder-gray-400 resize-none"
+                                    placeholder="Dua Content (Arabic)"
+                                ></textarea>
+                                <textarea 
+                                    id="customMeaning"
+                                    rows="2"
+                                    class="input-field w-full px-4 py-3 rounded-xl bg-white/80 focus:outline-none text-gray-800 placeholder-gray-400 resize-none"
+                                    placeholder="Meaning/Translation"
+                                ></textarea>
+                                <div class="flex space-x-3">
+                                    <button 
+                                        onclick="addCustomDua()"
+                                        class="flex-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors"
+                                    >
+                                        <i class="fas fa-check mr-2"></i>
+                                        Add Dua
+                                    </button>
+                                    <button 
+                                        onclick="toggleAddDuaForm()"
+                                        class="flex-1 py-2 px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-xl transition-colors"
+                                    >
+                                        <i class="fas fa-times mr-2"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="lg:col-span-1">
+                <div class="summary-box rounded-3xl p-6 shadow-lg sticky top-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-bookmark gold-accent mr-2"></i>
+                        Selected Duas
+                        <span class="text-sm font-normal text-gray-600 ml-2" id="selectedCount">(0)</span>
+                    </h3>
+                    
+                    <div id="selectedDuas" class="space-y-3 mb-6 min-h-[200px]">
+                        <div class="text-center text-gray-500 py-8">
+                            <i class="fas fa-hand-point-left text-3xl mb-3 opacity-50"></i>
+                            <p>Select duas from the list to add them here</p>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <button 
+                        onclick="saveDuaSet()"
+                        class="save-button w-full py-4 px-6 rounded-2xl text-white font-bold text-lg flex items-center justify-center space-x-3 focus:outline-none focus:ring-4 focus:ring-green-300"
+                        id="saveButton"
+                        disabled
+                    >
+                        <i class="fas fa-save text-xl"></i>
+                        <span>Save Dua Set</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDuas = [];
+        let duaCounter = 6; // Starting from 7 for new custom duas
+
+        const duaData = {
+            1: { title: "Dua for Protection", content: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", meaning: "I seek refuge in Allah from Satan the accursed" },
+            2: { title: "Dua for Guidance", content: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ", meaning: "Guide us to the straight path" },
+            3: { title: "Dua for Forgiveness", content: "رَبِّ اغْفِرْ لِي ذَنْبِي", meaning: "My Lord, forgive me my sin" },
+            4: { title: "Dua for Health", content: "اللَّهُمَّ عَافِنِي فِي بَدَنِي", meaning: "O Allah, grant me health in my body" },
+            5: { title: "Dua for Gratitude", content: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", meaning: "All praise is due to Allah, Lord of the worlds" },
+            6: { title: "Dua for Peace", content: "اللَّهُمَّ أَنْتَ السَّلَامُ", meaning: "O Allah, You are Peace" }
+        };
+
+        function toggleDua(card, duaId) {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                card.classList.add('selected');
+                selectedDuas.push(duaId);
+            } else {
+                card.classList.remove('selected');
+                selectedDuas = selectedDuas.filter(id => id !== duaId);
+            }
+            
+            updateSelectedDuas();
+        }
+
+        function updateSelectedDuas() {
+            const selectedContainer = document.getElementById('selectedDuas');
+            const selectedCount = document.getElementById('selectedCount');
+            const saveButton = document.getElementById('saveButton');
+            
+            selectedCount.textContent = `(${selectedDuas.length})`;
+            
+            if (selectedDuas.length === 0) {
+                selectedContainer.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-hand-point-left text-3xl mb-3 opacity-50"></i>
+                        <p>Select duas from the list to add them here</p>
+                    </div>
+                `;
+                saveButton.disabled = true;
+                saveButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                selectedContainer.innerHTML = selectedDuas.map(duaId => {
+                    const dua = duaData[duaId];
+                    return `
+                        <div class="bg-white/80 rounded-xl p-3 border border-green-200">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-gray-800 text-sm">${dua.title}</h5>
+                                    <p class="text-xs text-gray-600 mt-1">${dua.content}</p>
+                                </div>
+                                <button onclick="removeDua(${duaId})" class="text-red-400 hover:text-red-600 ml-2">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                saveButton.disabled = false;
+                saveButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function removeDua(duaId) {
+            const card = document.querySelector(`#dua${duaId}`).closest('.dua-card');
+            const checkbox = document.getElementById(`dua${duaId}`);
+            
+            checkbox.checked = false;
+            card.classList.remove('selected');
+            selectedDuas = selectedDuas.filter(id => id !== duaId);
+            
+            updateSelectedDuas();
+        }
+
+        function toggleAddDuaForm() {
+            const form = document.getElementById('addDuaForm');
+            form.classList.toggle('open');
+            
+            if (!form.classList.contains('open')) {
+                // Clear form
+                document.getElementById('customTitle').value = '';
+                document.getElementById('customContent').value = '';
+                document.getElementById('customMeaning').value = '';
+            }
+        }
+
+        function addCustomDua() {
+            const title = document.getElementById('customTitle').value.trim();
+            const content = document.getElementById('customContent').value.trim();
+            const meaning = document.getElementById('customMeaning').value.trim();
+            
+            if (!title || !content || !meaning) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            duaCounter++;
+            const newDuaId = duaCounter;
+            
+            // Add to data
+            duaData[newDuaId] = { title, content, meaning };
+            
+            // Create new card
+            const duaGrid = document.getElementById('duaGrid');
+            const newCard = document.createElement('div');
+            newCard.className = 'dua-card rounded-2xl p-4 cursor-pointer';
+            newCard.onclick = () => toggleDua(newCard, newDuaId);
+            newCard.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" class="checkbox-custom mt-1" id="dua${newDuaId}">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800 mb-2">${title}</h4>
+                        <p class="text-sm text-gray-600 mb-2">${content}</p>
+                        <p class="text-xs text-gray-500">${meaning}</p>
+                    </div>
+                </div>
+            `;
+            
+            duaGrid.appendChild(newCard);
+            
+            // Auto-select the new dua
+            setTimeout(() => {
+                toggleDua(newCard, newDuaId);
+            }, 100);
+            
+            // Close form
+            toggleAddDuaForm();
+        }
+
+        function saveDuaSet() {
+            const reason = document.getElementById('duaSetReason').value.trim();
+            
+            if (!reason) {
+                alert('Please enter a reason for this Dua Set');
+                return;
+            }
+            
+            if (selectedDuas.length === 0) {
+                alert('Please select at least one dua');
+                return;
+            }
+            
+            const button = document.getElementById('saveButton');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner fa-spin text-xl"></i><span>Saving...</span>';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check text-xl"></i><span>Saved Successfully!</span>';
+                button.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    alert(`Dua Set "${reason}" saved successfully with ${selectedDuas.length} duas! 🤲`);
+                    
+                    // Reset form
+                    document.getElementById('duaSetReason').value = '';
+                    selectedDuas = [];
+                    document.querySelectorAll('.dua-card').forEach(card => {
+                        card.classList.remove('selected');
+                        card.querySelector('input[type="checkbox"]').checked = false;
+                    });
+                    updateSelectedDuas();
+                    
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    button.classList.remove('bg-green-600');
+                }, 2000);
+            }, 1500);
+        }
+
+        // Initialize
+        updateSelectedDuas();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9667088c666671f4',t:'MTc1MzczMzU2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
