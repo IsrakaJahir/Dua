@@ -115,7 +115,7 @@
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Dua Card 1 -->
+                <!-- Dua Card  -->
                  <?php
   $result = $conn->query("SELECT * FROM duas");
   while ($row = $result->fetch_assoc()) {
@@ -134,9 +134,11 @@
                             "<?=$row['meaning']?>"
                         </p>
                     </div>
-                    <button class="w-full bg-light-green hover:bg-soft-green text-white py-3 rounded-lg font-medium transition-colors">
-                        Recite Now
-                    </button>
+                    <a href="counter.php?id=<?= $row['id'] ?>" 
+   class="w-full bg-light-green hover:bg-soft-green text-white py-3 rounded-lg font-medium transition-colors block text-center">
+   Recite Now
+</a>
+
                 </div>
 
               <?php
